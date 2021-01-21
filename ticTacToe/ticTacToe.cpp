@@ -22,8 +22,8 @@ bool isCanPlay(char cells[]);
 bool isCellEmpty(char cells[], int pos);
 void swap(char cells[], int pos, char symbol);
 char scanTheFieldToGetWinner(char cells[]);
-char scanTheRows(char cells[], char symbol, bool flag);
-char scanTheColumns(char cells[], char symbol, bool flag);
+char scanTheRows(char cells[], char symbol, int flag);
+char scanTheColumns(char cells[], char symbol, int flag);
 char scanTheDiagonals(char cells[], char symbol, int flag);
 int compare(char cell, char symbol);
 char checkWinner(char winner, int countX, int countO, int amount);
@@ -38,6 +38,7 @@ string getChoice();
 void showCurrentTurn(int priority);
 void showCurrentSide(bool isPlayerX);
 int convertAndCheckChoice(string str, char last, int sideChoice);
+char flagChoice(int flag, char symbol, int countX, int countO, int countEmpty, int pos);
 
 int main()
 {
@@ -323,12 +324,12 @@ char scanTheFieldToGetWinner(char cells[])
 	
 	if(winner == EMPTY)	
 	{
-		winner = scanTheRows(cells, winner, false);
+		winner = scanTheRows(cells, winner, 0);
 	}
 	
 	if(winner == EMPTY)	
 	{
-		winner = scanTheColumns(cells, winner, false);
+		winner = scanTheColumns(cells, winner, 0);
 	}
 	
 	if(winner == EMPTY)	
@@ -339,7 +340,7 @@ char scanTheFieldToGetWinner(char cells[])
 	return winner;
 }
 
-char scanTheRows(char cells[], char symbol, bool flag)
+char scanTheRows(char cells[], char symbol, int flag)
 {
 	int start, end, step, countX, countO, countEmpty, pos;
 	char custom = symbol;
@@ -355,25 +356,17 @@ char scanTheRows(char cells[], char symbol, bool flag)
 			countO += compare(cells[j], O);	
 			countEmpty += compare(cells[j], EMPTY);	
 			
-			if(flag && countEmpty == 1 && compare(cells[j], EMPTY) == 1)
+			if(flag == 1 && countEmpty == 1 && compare(cells[j], EMPTY) == 1)
 			{			
 				pos = j;					
 			}				
 		}
 		
-		if(flag)
-		{			
-			symbol = checkPreWinner(symbol, countX, countO, countEmpty, pos);				
-			
-			if(symbol != custom)
-			{
-				break;	
-			}	
-		}
+		symbol = flagChoice(flag, symbol, countX, countO, countEmpty, pos);
 		
-		if(!flag)
+		if(symbol != custom)
 		{
-			symbol = checkWinner(symbol, countX, countO, SIDE);	
+			break;	
 		}
 		
 		countX = 0, countO = 0, countEmpty = 0, pos = -1;
@@ -383,7 +376,7 @@ char scanTheRows(char cells[], char symbol, bool flag)
 	return symbol;
 }
 
-char scanTheColumns(char cells[], char symbol, bool flag)
+char scanTheColumns(char cells[], char symbol, int flag)
 {
 	int start, end, step, countX, countO, countEmpty, pos;
 	char custom = symbol;
@@ -399,25 +392,17 @@ char scanTheColumns(char cells[], char symbol, bool flag)
 			countO += compare(cells[j], O);	
 			countEmpty += compare(cells[j], EMPTY);	
 			
-			if(flag && countEmpty == 1 && compare(cells[j], EMPTY) == 1)
+			if(flag == 1 && countEmpty == 1 && compare(cells[j], EMPTY) == 1)
 			{			
 				pos = j;					
 			}			
 		}
 		
-		if(flag)
-		{			
-			symbol = checkPreWinner(symbol, countX, countO, countEmpty, pos);					
-			
-			if(symbol != custom)
-			{
-				break;	
-			}	
-		}
+		symbol = flagChoice(flag, symbol, countX, countO, countEmpty, pos);
 		
-		if(!flag)
+		if(symbol != custom)
 		{
-			symbol = checkWinner(symbol, countX, countO, SIDE);	
+			break;	
 		}	
 		
 		countX = 0, countO = 0, countEmpty = 0, pos = -1;
@@ -467,30 +452,12 @@ char scanTheDiagonals(char cells[], char symbol, int flag)
 			}			
 		}	
 		
-		if(flag == 0)
-		{
-			symbol = checkWinner(symbol, countX, countO, SIDE);	
-		}		
+		symbol = flagChoice(flag, symbol, countX, countO, countEmpty, pos);
 		
-		if(flag == 1)
-		{			
-			symbol = checkPreWinner(symbol, countX, countO, countEmpty, pos);					
-			
-			if(symbol != custom)
-			{
-				break;	
-			}	
-		}	
-	
-		if(flag == 2 && pos != -1)
-		{			
-			symbol = pos + CONVERT;					
-			
-			if(symbol != custom)
-			{
-				break;	
-			}	
-		}	
+		if(symbol != custom)
+		{
+			break;	
+		}
 
 		countX = 0, countO = 0, countEmpty = 0, pos = -1;
 		step = SIDE-1;
@@ -532,12 +499,12 @@ char scanTheField(char cells[], char symbol)
 
 	if(symbol == custom)
 	{
-		symbol = scanTheRows(cells, symbol, true);
+		symbol = scanTheRows(cells, symbol, 1);
 	}
 	
 	if(symbol == custom)
 	{
-		symbol = scanTheColumns(cells, symbol, true);
+		symbol = scanTheColumns(cells, symbol, 1);
 	}	
 	
 	if(symbol == custom)
@@ -697,4 +664,24 @@ int convertAndCheckChoice(string str, char last, int sideChoice)
 	}
 	
 	return sideChoice;
+}
+
+char flagChoice(int flag, char symbol, int countX, int countO, int countEmpty, int pos)
+{
+	if(flag == 0)
+	{
+		symbol = checkWinner(symbol, countX, countO, SIDE);	
+	}		
+	
+	if(flag == 1)
+	{			
+		symbol = checkPreWinner(symbol, countX, countO, countEmpty, pos);						
+	}	
+
+	if(flag == 2 && pos != -1)
+	{			
+		symbol = pos + CONVERT;						
+	}	
+	
+	return symbol;
 }
