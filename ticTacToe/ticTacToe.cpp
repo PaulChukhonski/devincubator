@@ -171,19 +171,19 @@ int main()
 					{
 						if(scanTheField(gameCells, pcSymbol) != pcSymbol)
 						{
-							pos = scanTheField(gameCells, pcSymbol) - CONVERT;	cout << "scanTheField: " << pos << endl; system("pause");
+							pos = scanTheField(gameCells, pcSymbol) - CONVERT;
 						}
 						else if(scanTheField(gameCells, playerSymbol) != playerSymbol)
 						{
-							pos = scanTheField(gameCells, playerSymbol) - CONVERT; cout << "scanTheField: " << pos << endl; system("pause");
+							pos = scanTheField(gameCells, playerSymbol) - CONVERT;
 						}	
 						else if(scanTheDiagonals(gameCells, pcSymbol, 2) != pcSymbol)
 						{
-							pos = scanTheDiagonals(gameCells, pcSymbol, 2) - CONVERT; cout << "scanTheField: " << pos << endl; system("pause");
+							pos = scanTheDiagonals(gameCells, pcSymbol, 2) - CONVERT;
 						}											
 						else if(chooseRandomCell(gameCells, EMPTY) != EMPTY)
 						{
-							pos = chooseRandomCell(gameCells, EMPTY) - CONVERT;	 cout << "scanTheField: " << pos << endl; system("pause");
+							pos = chooseRandomCell(gameCells, EMPTY) - CONVERT;
 						}
 			
 						if(isCellEmpty(gameCells, pos))
