@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdlib>
 using namespace std;
 #define SIDE 3
 #define SIZE SIDE*SIDE
@@ -19,7 +18,7 @@ void showAllFields(char cells[], char numeratedCells[]);
 string inputPosition(string str, bool isPlayerX);
 bool isCorrectInput(string str, char last);
 int strToInt(string str);
-bool canPlay(char cells[]);
+bool isCanPlay(char cells[]);
 bool isCellEmpty(char cells[], int pos);
 void swap(char cells[], int pos, char symbol);
 char scanTheFieldToGetWinner(char cells[]);
@@ -118,7 +117,6 @@ int main()
 				
 				break;
 			case 3:
-				srand(32760);
 				initializeGameField(gameCells);
 				initializeNumeratedField(numeratedCells);	
 				showAllFields(gameCells, numeratedCells);
@@ -134,7 +132,7 @@ int main()
 					pcSymbol = X;
 				}	
 				
-			    while(canPlay(gameCells))
+			    while(isCanPlay(gameCells))
 			    {	
 					if(priority % 2 == 1)
 					{	
@@ -173,19 +171,19 @@ int main()
 					{
 						if(scanTheField(gameCells, pcSymbol) != pcSymbol)
 						{
-							pos = scanTheField(gameCells, pcSymbol) - CONVERT;	
+							pos = scanTheField(gameCells, pcSymbol) - CONVERT;	cout << "scanTheField: " << pos << endl; system("pause");
 						}
 						else if(scanTheField(gameCells, playerSymbol) != playerSymbol)
 						{
-							pos = scanTheField(gameCells, playerSymbol) - CONVERT;
+							pos = scanTheField(gameCells, playerSymbol) - CONVERT; cout << "scanTheField: " << pos << endl; system("pause");
 						}	
 						else if(scanTheDiagonals(gameCells, pcSymbol, 2) != pcSymbol)
 						{
-							pos = scanTheDiagonals(gameCells, pcSymbol, 2) - CONVERT;
+							pos = scanTheDiagonals(gameCells, pcSymbol, 2) - CONVERT; cout << "scanTheField: " << pos << endl; system("pause");
 						}											
 						else if(chooseRandomCell(gameCells, EMPTY) != EMPTY)
 						{
-							pos = chooseRandomCell(gameCells, EMPTY) - CONVERT;	
+							pos = chooseRandomCell(gameCells, EMPTY) - CONVERT;	 cout << "scanTheField: " << pos << endl; system("pause");
 						}
 			
 						if(isCellEmpty(gameCells, pos))
@@ -294,7 +292,7 @@ int strToInt(string str)
 	return str[0] - CONVERT;					
 }
 
-bool canPlay(char cells[])
+bool isCanPlay(char cells[])
 {
 	bool check = false;
 	
@@ -432,7 +430,7 @@ char scanTheColumns(char cells[], char symbol, bool flag)
 char scanTheDiagonals(char cells[], char symbol, int flag)
 {
 	int start, end, step, countX, countO, countEmpty, pos;
-	char custom = symbol;
+	char custom = symbol, symbolX = EMPTY, symbolO = EMPTY;
 	
 	end = SIZE, step = SIDE+1;
 	countX = 0, countO = 0, countEmpty = 0, pos = -1;
@@ -450,9 +448,22 @@ char scanTheDiagonals(char cells[], char symbol, int flag)
 				pos = j;					
 			}
 			
-			if(flag == 2 && compare(cells[(SIZE-1)/2], custom) == 1 && ((countX == 1 && countO == 2) || (countX == 2 && countO == 1)) && SIDE == 3)
+			if(flag == 2 && SIDE == 3)
 			{	
-				pos = j-1;					
+			 	if(custom == X)
+			 	{
+			 		symbolX = custom;
+				}
+			 	
+				if(custom == O)
+			 	{
+			 		symbolO = custom;
+				}	
+				
+				if((compare(cells[(SIZE-1)/2], symbolX) == 1 && countX == 1 && countO == SIDE-1) || (compare(cells[(SIZE-1)/2], symbolO) == 1 && countO == 1  && countX == SIDE-1))		
+				{
+					pos = j-1;
+				}						
 			}			
 		}	
 		
