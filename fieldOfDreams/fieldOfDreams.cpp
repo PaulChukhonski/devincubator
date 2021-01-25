@@ -20,8 +20,10 @@ void showAllFields(char cells[], char numeratedCells[]);
 bool isCanPlay(char cells[]);
 void inputString(char str[]);
 bool isCorrectStrLength(char str[]);
+bool isCorrectWord(char str[], char word[]);
 bool isCorrectLetter(char letter);
 char convertLetters(char letter, char similarLetter);
+int strLength(char str[]);
 
 int main()
 {
@@ -40,18 +42,29 @@ int main()
 		flag = false;
 		inputString(str);
 		
-		if(!isCorrectStrLength(str))
+		if(!isCorrectStrLength(str) && !isCorrectWord(str, word))
 		{
-			cout << "Not a letter! Please, enter a letter."	<< endl;
+			cout << "Incorrect word!" << endl;
 			system("pause");
 		}
 		else
 		{
+			if(isCorrectWord(str, word))
+			{
+				for(int i = 0; i < FIELD_SIZE; i++)
+				{
+					gameCells[i] = word[i];				
+				}	
+				
+				showAllFields(gameCells, numeratedCells);				
+				break;
+			}
+			
 			letter = str[0];
 			
 			if(!isCorrectLetter(letter))
 			{
-				cout << "Not a letter! Please, enter a letter."	<< endl;
+				cout << "Not a letter!"	<< endl;
 				system("pause");
 			}
 			else
@@ -144,21 +157,16 @@ bool isCanPlay(char cells[])
 
 void inputString(char str[])
 {
-	cout << "Enter a letter: ";
+	cout << "Enter a letter or the whole word: ";
     cin >> str;
 }
 
 bool isCorrectStrLength(char str[])
 {
 	bool check = true;
-	int i = 0;
-	
-	while(str[i] != '\0')
-	{
-		i++;
-	}
+	int length = strLength(str);
 
-	if(i != 1)
+	if(length != 1)
 	{
 		check = false;
 	}
@@ -184,4 +192,39 @@ char convertLetters(char letter, char similarLetter)
 	}	
 
 	return similarLetter;
+}
+
+bool isCorrectWord(char str[], char word[])
+{
+	bool check = true;
+	char similarLetter;
+	
+	for(int i = 0; i < FIELD_SIZE; i++)
+	{
+		similarLetter = convertLetters(word[i], similarLetter);
+		
+		if(word[i] != str[i] && similarLetter != str[i])
+		{
+			check = false;
+		}	
+	}
+	
+	if(strLength(str) != strLength(word))
+	{
+		check = false;
+	}
+	
+	return check;
+}
+
+int strLength(char str[])
+{
+	int i = 0;
+	
+	while(str[i] != '\0')
+	{
+		i++;
+	}
+
+	return i;
 }
