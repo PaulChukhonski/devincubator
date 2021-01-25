@@ -9,7 +9,7 @@ int strLength(char str[]);
 int main()
 {
     char text[SIZE], word[SIZE], prevWord[SIZE] = "";
-    int i, iw = 0;
+    int i, iw = 0, pos;
 
     cout << "Input text: ";
     cin.getline(text, SIZE);
@@ -35,30 +35,25 @@ int main()
 					}					
 				}
 				else
-				{					
-	            	for(int j = i-iw+1; j <= i; j++)
+				{						
+					pos = i-iw+1;
+					
+					for(int k = 0; k <= iw; k++)
 					{
-						text[j] = ' '; 
-					}							
+						for(int j = pos; j < strLength(text)-1; j++)
+						{
+							text[j] = text[j+1];	
+						}
+					    		    
+					    text[strLength(text)-1] = 0;
+						i--;							
+					}		
 				}
 				
 				iw = 0;
             }
         }
     }
- 
-    for (i = 0; text[i] != '\0'; i++) 
-	{
-		for(;text[i] == ' ' && text[i+1] == ' ';)
-		{
-			for(int j = i; j < strLength(text)-1; j++)
-			{
-				text[j] = text[j+1];	
-			}
-		    		    
-		    text[strLength(text)-1] = 0;						
-		}
-    } 
     
     cout << text << endl;
     
